@@ -1,33 +1,24 @@
 import express from 'express';
-import FamilyMember from '../models/FamilyMember.js';
-import FamilyTree from '../models/FamilyTree.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { getTreeMembers, createMember, updateMember, deleteMember, hasTreeAccess } from '../services/memberService.js';
 
 const router = express.Router();
 
 // Get all members for a specific tree
 router.get('/tree/:treeId', authenticateToken, async (req, res) => {
   try {
+    const treeId = parseInt(req.params.treeId);
+    
     // Check if user has access to this tree
-    const tree = await FamilyTree.findOne({
-      _id: req.params.treeId,
-      $or: [
-        { owner: req.user._id },
-        { 'collaborators.user': req.user._id }
-      ]
-    });
-
-    if (!tree) {
+    const hasAccess = await hasTreeAccess(treeId, req.user.id);
+    if (!hasAccess) {
       return res.status(404).json({ error: 'Family tree not found or access denied' });
     }
 
-    const members = await FamilyMember.find({ treeId: req.params.treeId })
-      .populate('father', 'firstName lastName')
-      .populate('mother', 'firstName lastName')
-      .populate('spouse', 'firstName lastName');
-
+    const members = await getTreeMembers(treeId);
     res.json(members);
   } catch (error) {
+    console.error('Error fetching family members:', error);
     res.status(500).json({ error: 'Error fetching family members' });
   }
 });
@@ -36,22 +27,20 @@ router.get('/tree/:treeId', authenticateToken, async (req, res) => {
 router.post('/', authenticateToken, async (req, res) => {
   try {
     const { treeId, ...memberData } = req.body;
+    const treeIdNum = parseInt(treeId);
+
+    if (isNaN(treeIdNum)) {
+      return res.status(400).json({ error: 'Invalid tree ID' });
+    }
 
     // Check if user has write access to this tree
-    const tree = await FamilyTree.findOne({
-      _id: treeId,
-      $or: [
-        { owner: req.user._id },
-        { 'collaborators.user': req.user._id, 'collaborators.permissions': { $in: ['write', 'admin'] } }
-      ]
-    });
-
-    if (!tree) {
+    const hasAccess = await hasTreeAccess(treeIdNum, req.user.id, 'write');
+    if (!hasAccess) {
       return res.status(404).json({ error: 'Family tree not found or insufficient permissions' });
     }
 
-    const member = new FamilyMember({
-      treeId,
+    const member = await createMember({
+      treeId: treeIdNum,
       ...memberData
     });
 
