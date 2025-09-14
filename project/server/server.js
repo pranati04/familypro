@@ -9,7 +9,7 @@ import memberRoutes from './routes/members.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -30,6 +30,6 @@ app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running', status: 'healthy' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, 'localhost', () => {
+  console.log(`Server running on localhost:${PORT}`);
 });
