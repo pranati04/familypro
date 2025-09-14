@@ -99,12 +99,5 @@ export const spouseRelationshipsRelations = relations(spouseRelationships, ({ on
   }),
 }));
 
-// Type exports
-export type User = typeof users.$inferSelect;
-export type InsertUser = typeof users.$inferInsert;
-export type FamilyTree = typeof familyTrees.$inferSelect;
-export type InsertFamilyTree = typeof familyTrees.$inferInsert;
-export type FamilyMember = typeof familyMembers.$inferSelect;
-export type InsertFamilyMember = typeof familyMembers.$inferInsert;
-export type TreeCollaborator = typeof treeCollaborators.$inferSelect;
-export type InsertTreeCollaborator = typeof treeCollaborators.$inferInsert;
+// Type inference helpers for JS projects
+// Use: const user = { ...userData }; // user will have the inferred structure
