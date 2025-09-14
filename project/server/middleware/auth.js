@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import { findUserById } from '../services/userService.js';
 
 export const authenticateToken = async (req, res, next) => {
   try {
@@ -10,8 +10,8 @@ export const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ error: 'Access token required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    const user = await findUserById(decoded.userId);
     
     if (!user) {
       return res.status(401).json({ error: 'Invalid token' });

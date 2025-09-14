@@ -17,42 +17,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Family Tree App"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "MongoDB"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Backend Server"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "Frontend App"
 
-[[workflows.workflow]]
-name = "Family Tree App"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
 [[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd project && npm start"
-waitForPort = 5000
-
-[[workflows.workflow]]
-name = "MongoDB"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "console"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "mongod --dbpath /tmp/mongodb --port 27017 --bind_ip 127.0.0.1"
+task = "workflow.run"
+args = "Frontend"
 
 [[workflows.workflow]]
 name = "Backend Server"
@@ -77,6 +50,18 @@ waitForPort = 5000
 [workflows.workflow.metadata]
 outputType = "webview"
 
+[[workflows.workflow]]
+name = "Frontend"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project && npm run client"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [[ports]]
 localPort = 3001
 externalPort = 3002
@@ -85,10 +70,6 @@ exposeLocalhost = true
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 41775
-externalPort = 3001
 
 [deployment]
 deploymentTarget = "autoscale"

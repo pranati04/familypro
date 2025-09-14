@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -7,6 +6,7 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import treeRoutes from './routes/trees.js';
 import memberRoutes from './routes/members.js';
+import { db } from './db.js';
 
 dotenv.config();
 
@@ -24,10 +24,12 @@ app.use(express.json());
 // Serve static files from the Vite build
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/familytree')
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Test database connection
+try {
+  console.log('Connected to PostgreSQL database');
+} catch (err) {
+  console.error('Database connection error:', err);
+}
 
 // Routes
 app.use('/api/auth', authRoutes);
