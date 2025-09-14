@@ -22,6 +22,14 @@ args = "Family Tree App"
 task = "workflow.run"
 args = "MongoDB"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Backend Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Frontend App"
+
 [[workflows.workflow]]
 name = "Family Tree App"
 author = "agent"
@@ -45,6 +53,29 @@ outputType = "console"
 task = "shell.exec"
 args = "mongod --dbpath /tmp/mongodb --port 27017 --bind_ip 127.0.0.1"
 
+[[workflows.workflow]]
+name = "Backend Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project && node server/server.js"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow]]
+name = "Frontend App"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project && CHOKIDAR_USEPOLLING=1 npm run client"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [[ports]]
 localPort = 3001
 externalPort = 3002
@@ -53,10 +84,6 @@ exposeLocalhost = true
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 5001
-externalPort = 3000
 
 [[ports]]
 localPort = 41775

@@ -11,7 +11,11 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5000,
     strictPort: true,
-    hmr: {
+    watch: { 
+      usePolling: true, 
+      interval: 1000 
+    },
+    hmr: { 
       port: 5000
     },
     proxy: {
