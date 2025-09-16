@@ -1,6 +1,15 @@
 import jwt from 'jsonwebtoken';
 import { findUserById } from '../services/userService.js';
 
+// Validate JWT_SECRET is configured
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is required for secure authentication');
+  }
+  return secret;
+};
+
 export const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
@@ -10,7 +19,7 @@ export const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ error: 'Access token required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    const decoded = jwt.verify(token, getJwtSecret());
     const user = await findUserById(decoded.userId);
     
     if (!user) {

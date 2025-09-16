@@ -25,7 +25,7 @@ export const TreeManagement: React.FC<TreeManagementProps> = ({
     setError('');
 
     try {
-      await treeAPI.addCollaborator(tree._id, { email, permissions });
+      await treeAPI.addCollaborator(tree.id, { email, permissions });
       setEmail('');
       setPermissions('read');
       onUpdate();

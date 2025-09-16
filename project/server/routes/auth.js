@@ -3,6 +3,15 @@ import jwt from 'jsonwebtoken';
 import { authenticateToken } from '../middleware/auth.js';
 import { createUser, findUserByEmail, comparePassword } from '../services/userService.js';
 
+// Validate JWT_SECRET is configured
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is required for secure authentication');
+  }
+  return secret;
+};
+
 const router = express.Router();
 
 // Register
@@ -20,7 +29,7 @@ router.post('/register', async (req, res) => {
     const user = await createUser({ name, email, password });
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id }, getJwtSecret(), { expiresIn: '7d' });
 
     res.status(201).json({
       token,
@@ -54,7 +63,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id }, getJwtSecret(), { expiresIn: '7d' });
 
     res.json({
       token,

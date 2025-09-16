@@ -1,6 +1,6 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
-import { createTree, getUserTrees, getTreeById, addCollaborator } from '../services/treeService.js';
+import { createTree, getUserTrees, getTreeById, addCollaborator, mergeTrees } from '../services/treeService.js';
 import { findUserByEmail } from '../services/userService.js';
 
 const router = express.Router();
@@ -81,7 +81,7 @@ router.post('/:treeId/collaborators', authenticateToken, async (req, res) => {
   }
 });
 
-// Merge trees - placeholder implementation
+// Merge trees implementation
 router.post('/:treeId/merge/:sourceTreeId', authenticateToken, async (req, res) => {
   try {
     const treeId = parseInt(req.params.treeId);
@@ -91,12 +91,15 @@ router.post('/:treeId/merge/:sourceTreeId', authenticateToken, async (req, res) 
       return res.status(400).json({ error: 'Invalid tree IDs' });
     }
 
-    // For now, return a placeholder response
-    // TODO: Implement tree merging with PostgreSQL
-    res.json({ message: 'Tree merging not yet implemented', treeId, sourceTreeId });
+    if (treeId === sourceTreeId) {
+      return res.status(400).json({ error: 'Cannot merge a tree with itself' });
+    }
+
+    const result = await mergeTrees(treeId, sourceTreeId, req.user.id);
+    res.json(result);
   } catch (error) {
     console.error('Error merging trees:', error);
-    res.status(500).json({ error: 'Error merging trees' });
+    res.status(500).json({ error: error.message || 'Error merging trees' });
   }
 });
 
