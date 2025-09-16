@@ -25,11 +25,21 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // Test database connection
-try {
-  console.log('Connected to PostgreSQL database');
-} catch (err) {
-  console.error('Database connection error:', err);
+async function validateDatabaseConnection() {
+  try {
+    // Test the connection with a simple query
+    const result = await db.execute('SELECT 1 as test');
+    console.log('✅ PostgreSQL database connection validated successfully');
+    return true;
+  } catch (err) {
+    console.error('❌ Database connection error:', err.message);
+    console.error('Make sure DATABASE_URL is set and the database is accessible');
+    process.exit(1);
+  }
 }
+
+// Validate database connection before starting server
+validateDatabaseConnection();
 
 // Routes
 app.use('/api/auth', authRoutes);

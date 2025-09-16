@@ -2,7 +2,7 @@
 
 ## Overview
 
-A full-stack family tree application that allows users to create, manage, and visualize family relationships. Built with React frontend and Express.js backend using MongoDB for data persistence. Users can register accounts, create multiple family trees, add family members with detailed information, and collaborate with others on shared trees.
+A full-stack family tree application that allows users to create, manage, and visualize family relationships. Built with React frontend and Express.js backend using PostgreSQL for data persistence via Drizzle ORM. Users can register accounts, create multiple family trees, add family members with detailed information, and collaborate with others on shared trees.
 
 ## User Preferences
 
@@ -21,15 +21,17 @@ Preferred communication style: Simple, everyday language.
 - **Express.js** server with ES6 modules for modern JavaScript syntax
 - **RESTful API design** with dedicated route handlers for authentication, trees, and members
 - **JWT-based authentication** with middleware for protected routes
-- **Mongoose ODM** for MongoDB interaction with schema validation
+- **Drizzle ORM** for PostgreSQL interaction with type-safe schema validation
 - **bcryptjs** for password hashing and secure authentication
 
 ### Data Storage
-- **MongoDB** as the primary database for flexible document storage
-- **Three main collections**:
-  - Users: Authentication and profile information
-  - FamilyTrees: Tree metadata, ownership, and collaboration settings
-  - FamilyMembers: Individual family member data with relationships
+- **PostgreSQL** as the primary database for reliable relational data storage
+- **Five main tables**:
+  - users: Authentication and profile information
+  - family_trees: Tree metadata, ownership, and collaboration settings
+  - family_members: Individual family member data with relationships
+  - tree_collaborators: Junction table for user-tree collaboration permissions
+  - spouse_relationships: Junction table for spouse relationships between members
 
 ### Authentication System
 - **JWT tokens** for stateless authentication with 7-day expiration
@@ -51,7 +53,9 @@ Preferred communication style: Simple, everyday language.
 - **Tailwind CSS**: Utility-first CSS framework with PostCSS and Autoprefixer
 
 ### Backend Services
-- **MongoDB**: Document database for storing user data, family trees, and member information
+- **PostgreSQL**: Relational database for storing user data, family trees, and member information
+- **Drizzle ORM**: Type-safe ORM for database operations and schema management
+- **Neon Database**: Serverless PostgreSQL hosting with websocket connections
 - **JWT**: JSON Web Tokens for secure authentication
 - **bcryptjs**: Password hashing library for user security
 - **CORS**: Cross-origin resource sharing for frontend-backend communication
