@@ -3,7 +3,7 @@ import { TreePine, Users, Eye, Edit3 } from 'lucide-react';
 
 interface TreeCardProps {
   tree: {
-    _id: string;
+    id: string;
     name: string;
     description?: string;
     owner: { name: string; email: string };
@@ -56,14 +56,14 @@ export const TreeCard: React.FC<TreeCardProps> = ({ tree, onView, onEdit }) => {
 
         <div className="flex space-x-2">
           <button
-            onClick={() => onView(tree._id)}
+            onClick={() => onView(tree.id)}
             className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center space-x-2"
           >
             <Eye className="w-4 h-4" />
             <span>View Tree</span>
           </button>
           <button
-            onClick={() => onEdit(tree._id)}
+            onClick={() => onEdit(tree.id)}
             className="bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center"
           >
             <Edit3 className="w-4 h-4" />

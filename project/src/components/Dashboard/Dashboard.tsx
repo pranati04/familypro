@@ -6,7 +6,7 @@ import { treeAPI } from '../../services/api';
 import { Plus, TreePine, LogOut } from 'lucide-react';
 
 interface Tree {
-  _id: string;
+  id: string;
   name: string;
   description?: string;
   owner: { name: string; email: string };
@@ -138,7 +138,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectTree }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {trees.map((tree) => (
               <TreeCard
-                key={tree._id}
+                key={tree.id}
                 tree={tree}
                 onView={handleViewTree}
                 onEdit={handleEditTree}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, User, Calendar, FileText } from 'lucide-react';
 
 interface FamilyMember {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -55,9 +55,9 @@ export const MemberForm: React.FC<MemberFormProps> = ({
         gender: member.gender,
         photo: member.photo || '',
         biography: member.biography || '',
-        father: member.father?._id || '',
-        mother: member.mother?._id || '',
-        spouse: member.spouse.map(s => s._id) || []
+        father: member.father?.id || '',
+        mother: member.mother?.id || '',
+        spouse: member.spouse.map(s => s.id) || []
       });
     }
   }, [member]);
@@ -85,13 +85,13 @@ export const MemberForm: React.FC<MemberFormProps> = ({
   };
 
   const availableFathers = members.filter(m => 
-    m.gender === 'male' && m._id !== member?._id && !formData.spouse.includes(m._id)
+    m.gender === 'male' && m.id !== member?.id && !formData.spouse.includes(m.id)
   );
   const availableMothers = members.filter(m => 
-    m.gender === 'female' && m._id !== member?._id && !formData.spouse.includes(m._id)
+    m.gender === 'female' && m.id !== member?.id && !formData.spouse.includes(m.id)
   );
   const availableSpouses = members.filter(m => 
-    m._id !== member?._id && m._id !== formData.father && m._id !== formData.mother
+    m.id !== member?.id && m.id !== formData.father && m.id !== formData.mother
   );
 
   return (

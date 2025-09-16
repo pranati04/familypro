@@ -2,7 +2,7 @@ import React from 'react';
 import { Edit3, Trash2, User } from 'lucide-react';
 
 interface FamilyMember {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -55,7 +55,7 @@ export const MemberNode: React.FC<MemberNodeProps> = ({ member, onEdit, onDelete
           <Edit3 className="w-3 h-3" />
         </button>
         <button
-          onClick={() => onDelete(member._id)}
+          onClick={() => onDelete(member.id)}
           className="w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors duration-200"
         >
           <Trash2 className="w-3 h-3" />

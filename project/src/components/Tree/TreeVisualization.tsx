@@ -2,7 +2,7 @@ import React from 'react';
 import { MemberNode } from './MemberNode';
 
 interface FamilyMember {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -84,7 +84,7 @@ export const TreeVisualization: React.FC<TreeVisualizationProps> = ({
             <div className="flex flex-wrap justify-center gap-6">
               {generations[genKey].map(member => (
                 <MemberNode
-                  key={member._id}
+                  key={member.id}
                   member={member}
                   onEdit={onEditMember}
                   onDelete={onDeleteMember}

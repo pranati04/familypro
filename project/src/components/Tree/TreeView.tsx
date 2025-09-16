@@ -6,7 +6,7 @@ import { memberAPI, treeAPI } from '../../services/api';
 import { Plus, Settings, ArrowLeft, Users } from 'lucide-react';
 
 interface FamilyMember {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -69,7 +69,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ treeId, onBack }) => {
   const handleUpdateMember = async (memberData: any) => {
     try {
       if (selectedMember) {
-        await memberAPI.updateMember(selectedMember._id, memberData);
+        await memberAPI.updateMember(selectedMember.id, memberData);
         setShowMemberForm(false);
         setSelectedMember(null);
         loadTreeData();
