@@ -16,7 +16,8 @@ export default defineConfig({
       interval: 1000 
     },
     hmr: { 
-      port: 5000
+      protocol: 'wss',
+      clientPort: 443
     },
     proxy: {
       '/api': {

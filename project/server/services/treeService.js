@@ -61,10 +61,14 @@ export async function getTreeById(treeId, userId) {
     );
 
   if (ownedTree) {
+    // Get collaborators for this tree
+    const collaborators = await getTreeCollaborators(treeId);
+    
     return {
       ...ownedTree.family_trees,
       owner: ownedTree.users,
-      isOwner: true
+      isOwner: true,
+      collaborators
     };
   }
 
@@ -82,15 +86,38 @@ export async function getTreeById(treeId, userId) {
     );
 
   if (collaboratedTree) {
+    // Get collaborators for this tree
+    const collaborators = await getTreeCollaborators(treeId);
+    
     return {
       ...collaboratedTree.family_trees,
       owner: collaboratedTree.users,
       isOwner: false,
-      permission: collaboratedTree.tree_collaborators?.permission
+      permission: collaboratedTree.tree_collaborators?.permission,
+      collaborators
     };
   }
 
   return null;
+}
+
+// Helper function to get tree collaborators with user details
+export async function getTreeCollaborators(treeId) {
+  const collaborators = await db
+    .select({
+      id: treeCollaborators.id,
+      permissions: treeCollaborators.permission,
+      user: {
+        id: users.id,
+        name: users.name,
+        email: users.email
+      }
+    })
+    .from(treeCollaborators)
+    .leftJoin(users, eq(treeCollaborators.userId, users.id))
+    .where(eq(treeCollaborators.treeId, treeId));
+
+  return collaborators;
 }
 
 export async function addCollaborator(treeId, userId, permission = 'read') {
