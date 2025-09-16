@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.js';
 import treeRoutes from './routes/trees.js';
 import memberRoutes from './routes/members.js';
 import { db } from './db.js';
+import { sql } from 'drizzle-orm';
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+const HOST = '0.0.0.0';
 
 // Middleware
 app.use(cors());
@@ -28,7 +29,7 @@ app.use(express.static(path.join(__dirname, '../dist')));
 async function validateDatabaseConnection() {
   try {
     // Test the connection with a simple query
-    const result = await db.execute('SELECT 1 as test');
+    const result = await db.execute(sql`SELECT 1 as test`);
     console.log('✅ PostgreSQL database connection validated successfully');
     return true;
   } catch (err) {
@@ -38,8 +39,15 @@ async function validateDatabaseConnection() {
   }
 }
 
-// Validate database connection before starting server
-validateDatabaseConnection();
+// Initialize server
+async function startServer() {
+  // Validate database connection before starting server
+  await validateDatabaseConnection();
+  
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on ${HOST}:${PORT}`);
+  });
+}
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -56,6 +64,8 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on ${HOST}:${PORT}`);
+// Start the server
+startServer().catch(err => {
+  console.error('❌ Failed to start server:', err);
+  process.exit(1);
 });

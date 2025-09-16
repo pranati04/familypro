@@ -49,7 +49,6 @@ outputType = "webview"
 [[ports]]
 localPort = 3001
 externalPort = 3002
-exposeLocalhost = true
 
 [[ports]]
 localPort = 5000
@@ -66,4 +65,4 @@ externalPort = 3000
 [deployment]
 deploymentTarget = "vm"
 build = ["npm", "run", "build"]
-run = ["node", "server/server.js"]
+run = ["npm", "run", "start:prod"]
